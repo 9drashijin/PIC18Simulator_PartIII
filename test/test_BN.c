@@ -7,12 +7,48 @@
 void setUp(void){}
 void tearDown(void){}
 
-void test_BN(){
+void test_BN_given_STATUS_is_zero_and_should_not_branch_but_skip_the_next_instruction(){
 	Instruction inst = {.mnemonic = BN,.name = "bn"};	
 	Bytecode code = {.instruction = &inst,
-					 .operand1 = 0xA5,
-					 .operand2 = 0,
-					 .operand3 = 0,
+					 .operand1 = 15,
+					 .operand2 = 100,
+					 .operand3 = -1,
 					};
-	bn(&code);				
+	FSR[STATUS] = 0;
+	//printf("absoluteAddress: %d\n",code.absoluteAddress);
+	bn(&code);		
+	//printf("absoluteAddress: %d",code.absoluteAddress);
+	
+	TEST_ASSERT_EQUAL(2,code.absoluteAddress);
+}
+void test_BN_given_STATUS_is_one_and_should_branch(){
+	Instruction inst = {.mnemonic = BN,.name = "bn"};	
+	Bytecode code = {.instruction = &inst,
+					 .operand1 = 15,
+					 .operand2 = 100,
+					 .operand3 = -1,
+					};
+	FSR[STATUS] = 16;
+//	printf("absoluteAddress: %d\n",code.absoluteAddress);
+	bn(&code);		
+//	printf("absoluteAddress: %d",code.absoluteAddress);
+	
+	TEST_ASSERT_EQUAL(100,code.absoluteAddress);
+}
+void test_BN_given_both_operand1_and_2_is_empty_should_throw_error(){
+	Instruction inst = {.mnemonic = BN,.name = "bn"};	
+	Bytecode code = {.instruction = &inst,
+					 .operand1 = 15,
+					 .operand2 = -1,
+					 .operand3 = -1,
+					};
+	FSR[STATUS] = 16;
+	CException errorRange;
+	Try{
+		bn(&code);		
+		TEST_ASSERT_EQUAL(100,code.absoluteAddress);
+	}
+	Catch(errorRange){
+		TEST_ASSERT_EQUAL(INVALID_RANGE,errorRange);
+	}
 }
