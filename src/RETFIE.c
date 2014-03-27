@@ -25,7 +25,7 @@ else {Throw(INVALID_OPERAND);}
 	TOSU == PIC18Stack[TOSU];
 	TOSH == PIC18Stack[TOSH];
 	TOSL == PIC18Stack[TOSL];
-	PC = (TOSU*65536)  + (TOSH*256) + TOSL;	//printf("PC: %d\n",PC);
+	PC = (TOSU*256)  + (TOSH*256) + TOSL;//	printf("PC: %d\n",PC);
 	if(code->operand2 == 1){
 		
 		FSR[WREG] 	= FSR[WREGS];	// Content of shadow register(WREGS) are loaded to WREG
