@@ -4,6 +4,7 @@
 #include "CException.h"
 
 char FSR[0x1000];
+int PC;
 
 /**	10	 
 *	15	here	bn  there
